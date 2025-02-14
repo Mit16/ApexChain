@@ -69,8 +69,8 @@ Contributions are welcome! If you'd like to contribute, please follow these step
 
 ## **Contact**
 For questions or feedback, feel free to reach out:
-- **Email**: your-email@example.com
-- **GitHub**: [your-username](https://github.com/your-username)
+- **Email**: amitk.vishwa1633@gmal.com
+- **GitHub**: (https://github.com/your-username)
 
 ## **Commit and Push Your Changes**
 1. Open your terminal or command prompt.
@@ -83,9 +83,3 @@ For questions or feedback, feel free to reach out:
    ```
 
 
-- `blockchain`
-- `java`
-- `cryptography`
-- `proof-of-work`
-- `transactions`
-- `wallet`
