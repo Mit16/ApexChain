@@ -70,7 +70,7 @@ Contributions are welcome! If you'd like to contribute, please follow these step
 ## **Contact**
 For questions or feedback, feel free to reach out:
 - **Email**: amitk.vishwa1633@gmal.com
-- **GitHub**: (https://github.com/your-username)
+- **GitHub**: (https://github.com/Mit16)
 
 ## **Commit and Push Your Changes**
 1. Open your terminal or command prompt.
