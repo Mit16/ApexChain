@@ -38,49 +38,55 @@ public class Transaction {
         signature = StringUtil.applyECDSASig(privateKey, data);
     }
 
-    // verefies the data we signed hasn't been tempered with
+    // verifies the data we signed hasn't been tempered with
     public boolean verifySignature() {
         String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(recipient) + Float.toString(value);
         return StringUtil.verifyECDSASig(sender, data, signature);
     }
 
     //Returns true if new transaction could be created
-    public boolean processTransaction(){
-        if(verifySignature() == false){
+    public boolean processTransaction() {
+        if (!verifySignature()) {
             System.out.println("# Transaction Signature failed to verify");
             return false;
         }
 
         //gather transaction inputs ( unspent)
-        for(TransactionInput i: inputs){
+        for (TransactionInput i : inputs) {
             i.UTXO = ApexChain.UTXOs.get(i.transactionOutputId);
         }
 
         // check if transaction is valid
-        if(getInputsValue()< ApexChain.minimumTransaction){
-            System.out.println("#Transaction Inputs to small: "+ getInputsValue());
+        if (getInputsValue() < ApexChain.minimumTransaction) {
+            System.out.println("#Transaction Inputs to small: " + getInputsValue());
             return false;
         }
 
-        // generate transaction is valid
-        float leftOver = getInputValue() - value; // get value of inputs then the left over change
+        // Generate transaction outputs
+        float leftOver = getInputsValue() - value; // get value of inputs then the left over change
         transactionId = calculateHash();
-        outputs.add(new TransactionOutput(this.recipient,value,transactionId));// send value to recipient
-        outputs.add(new TransactionOutput(this.sender,leftOver,transactionId)); //send the left over
+        outputs.add(new TransactionOutput(this.recipient, value, transactionId)); // send value to recipient
+        outputs.add(new TransactionOutput(this.sender, leftOver, transactionId)); // send the left over
 
-        // add outputs to Unspent list
-        for(TransactionInput i:inputs){
-            if(i.UTXO == null) continue; //if Transaction can't be found skip it
-            ApexChain.UTXOs.remove(i.UTXO.id);
+        // Add outputs to Unspent list
+        for (TransactionOutput o : outputs) {
+            ApexChain.UTXOs.put(o.id, o);
+        }
+
+        // Remove transaction inputs from UTXO list as spent
+        for (TransactionInput i : inputs) {
+            if (i.UTXO != null) {
+                ApexChain.UTXOs.remove(i.UTXO.id);
+            }
         }
 
         return true;
     }
 
     // return sum of inputs(UTXOs) values
-    public float getInputsValue(){
+    public float getInputsValue() {
         float total = 0;
-        for(TransactionInput i:inputs){
+        for (TransactionInput i : inputs) {
             if (i.UTXO == null) continue; // if Transactions can't be found skip it
             total += i.UTXO.value;
         }
@@ -88,10 +94,10 @@ public class Transaction {
     }
 
     // return sum of outputs
-    public float getOutputsValue(){
-        float total =0;
-        for(TransactionOutput 0: outputs){
-            total += o.value;
+    public float getOutputsValue() {
+        float total = 0;
+        for (TransactionOutput output : outputs) {
+            total += output.value;
         }
         return total;
     }
